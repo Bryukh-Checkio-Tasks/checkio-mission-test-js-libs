@@ -79,157 +79,35 @@ requirejs(['ext_editor_1', 'jquery_190', 'three.latest'],
                 //if you need additional info from tests (if exists)
                 var explanation = data.ext["explanation"];
 
-                var mouseX = 0, mouseY = 0, mouseZ = 0;
-                var width = 400;
-                var height = 400;
-                var windowHalfX = width / 2;
-                var windowHalfY = height / 2;
 
+
+//                ========================================================
                 var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(75, 400 / 300, 0.1, 1000);
 
-                var camera = new THREE.PerspectiveCamera(100, width / height, 0.1, 100000);
-
-                var renderer = new THREE.WebGLRenderer({ alpha: true });
-                renderer.setSize(width, height);
-                renderer.setClearColorHex(0xccffff, 1);
+                var renderer = new THREE.WebGLRenderer();
+                renderer.setSize(400, 300);
                 $content.find(".explanation")[0].appendChild(renderer.domElement);
 
-                var colorOrange4 = "#F0801A";
-                var colorOrange3 = "#FA8F00";
-                var colorOrange2 = "#FAA600";
-                var colorOrange1 = "#FABA00";
+                var geometry = new THREE.BoxGeometry(1, 1, 1);
+                var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+                var cube = new THREE.Mesh(geometry, material);
+                scene.add(cube);
 
-                var colorBlue4 = "#294270";
-                var colorBlue3 = "#006CA9";
-                var colorBlue2 = "#65A1CF";
-                var colorBlue1 = "#8FC7ED";
+                camera.position.z = 5;
 
-                var colorGrey4 = "#737370";
-                var colorGrey3 = "#9D9E9E";
-                var colorGrey2 = "#C5C6C6";
-                var colorGrey1 = "#EBEDED";
-
-                var colorWhite = "#FFFFFF";
-
-                var maze = [
-                    [1, 1, 0, 1, 1, 1],
-                    [1, 0, 1, 1, 0, 1],
-                    [0, 0, 0, 1, 0, 0],
-                    [1, 1, 0, 0, 0, 1],
-                    [1, 1, 0, 1, 0, 1],
-                    [1, 1, 0, 1, 1, 1]
-                ];
-
-                //    var maze = [[1]];
-
-                var cell = 20;
-                var pad = 0.05 * cell;
-
-
-                var floorG = new THREE.BoxGeometry(cell * maze.length, cell * maze[0].length, 1);
-                var materialFloor = new THREE.MeshBasicMaterial({color: colorBlue1});
-                var floor = new THREE.Mesh(floorG, materialFloor);
-                floor.position.set(cell * (maze.length - 1) / 2, cell * (maze[0].length - 1) / 2, -2);
-                scene.add(floor);
-
-
-                var mazeObjects = [];
-                for (var i = 0; i < maze.length; i++) {
-                    var row = [];
-                    for (var j = 0; j < maze[i].length; j++) {
-                        if (maze[i][j] === 1) {
-                            var geometry = new THREE.BoxGeometry(cell - pad * 2, cell - pad * 2, cell);
-            //                var geometry = new THREE.BoxGeometry(cell, cell, cell);
-                            var materialShape = new THREE.MeshLambertMaterial({color: colorBlue2});
-                            var materialEdges = new THREE.MeshBasicMaterial({wireframe: true, color: colorBlue4, wireframeLinewidth: 5});
-            //                var cube2 = new THREE.Mesh(geometry, material2);
-                            var cubeShape = new THREE.Mesh(geometry, materialShape);
-            //                var cubeEdges = new THREE.Mesh(geometry, materialEdges);
-            //                cubeEdges.position.set(i * cell - pad, j * cell - pad, cell / 2);
-                            cubeShape.position.set(i * cell, j * cell, cell / 2);
-                            var edges = new THREE.EdgesHelper(cubeShape, colorBlue4);
-                            edges.material.linewidth = 5;
-                            scene.add(cubeShape);
-            //                scene.add(edges);
-            //                scene.add(cubeEdges);
-                        }
-                    }
-                }
-
-                //    var light = new THREE.PointLight(0xffffff, 5, 6 * cell);
-                var light = new THREE.DirectionalLight(0xffffff, 1);
-                light.position.x = cell * maze.length / 2;
-                //    light.position.x = 0;
-                light.position.y = cell * maze[0].length / 2;
-                light.position.z = 7 * cell;
-                scene.add(light);
-                //
-                //
-                //    var light = new THREE.AmbientLight(0xffffff);
-                //    scene.add(light);
-
-                camera.position.x = cell * maze.length / 2 - cell / 2;
-                camera.position.y = cell * maze[0].length / 2 - cell / 2;
-                camera.position.z = 5 * cell;
-
-
-                //        cube.rotation.x += 1;
-                //        cube.rotation.y += 1;
-
-//                var mouseDown = false;
-//
-//
-//                var initialMouseX = 0;
-//                var initialMouseY = 0;
-//
-//                renderer.domElement.addEventListener('mousedown', function (e) {
-//                    mouseDown = true;
-//                    initialMouseX = event.clientX;
-//                    initialMouseY = event.clientY;
-//                }, false);
-//
-//                renderer.domElement.addEventListener('mouseup', function (e) {
-//                    mouseDown = false;
-//                    mouseX = 0;
-//                    mouseY = 0;
-//
-//                }, false);
-//
-//                renderer.domElement.addEventListener('mousemove', onDocumentMouseMove, false);
-//
-//                renderer.domElement.addEventListener('mousewheel', function(e) {
-//                    e.preventDefault();
-//                    if (camera.position.z > cell * 2 || e.wheelDelta > 0) {
-//                        camera.position.z += 2 * (e.wheelDelta / Math.abs(e.wheelDelta));
-//                    }
-//                }, false);
-//
-//
-//                function onDocumentMouseMove(event) {
-//                    if (mouseDown) {
-//                        mouseX = ( event.clientX - initialMouseX );
-//
-//                        mouseY = ( event.clientY - initialMouseY );
-//                    }
-//
-//                }
                 var render = function () {
+                    requestAnimationFrame(render);
 
-//                    camera.position.x += mouseX * 0.02;
-//                    camera.position.y += mouseY * 0.02;
-//
-//
-//                    camera.lookAt(new THREE.Vector3(cell * maze.length / 2 - cell / 2, cell * maze.length / 2 - cell /2, cell));
+                    cube.rotation.x += 0.1;
+                    cube.rotation.y += 0.1;
 
                     renderer.render(scene, camera);
-
-                    requestAnimationFrame(render);
                 };
 
                 render();
 
-
-
+//                ========================================================
                 $content.find('.output').html('&nbsp;Your result:&nbsp;' + JSON.stringify(userResult));
                 if (!result) {
                     $content.find('.answer').html('Right result:&nbsp;' + JSON.stringify(rightResult));
