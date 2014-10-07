@@ -87,8 +87,8 @@ requirejs(['ext_editor_1', 'jquery_190', 'three.latest'],
 
                 var renderer = new THREE.WebGLRenderer();
                 renderer.setSize(400, 300);
-                console.log($content.find(".explanation")[0]);
-                $content.find(".explanation").append(renderer.domElement);
+                console.log(renderer.domElement);
+                document.querySelector(".explanation").appendChild(renderer.domElement);
 
                 var geometry = new THREE.BoxGeometry(1, 1, 1);
                 var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
